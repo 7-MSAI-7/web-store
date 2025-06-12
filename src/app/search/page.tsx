@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import SearchClient from './SearchClient'
+import SearchClient from './SearchClient.tsx'
 
 export default function SearchPage() {
   return (
