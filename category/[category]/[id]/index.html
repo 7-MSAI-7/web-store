@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Fashion Store</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <p>Free shipping on orders over $50</p>
+        <div class="top-banner-links">
+            <a href="#">Sign in</a>
+            <a href="#">Register</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-left">
+                <a href="/" class="logo">FASHION</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/category/men">Men</a>
+                    <a href="/category/women">Women</a>
+                    <a href="/category/kids">Kids</a>
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+                <a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Detail -->
+    <main class="product-detail">
+        <div class="container">
+            <div class="product-detail-content">
+                <div class="product-gallery">
+                    <img id="main-image" src="" alt="Product Image">
+                    <div class="thumbnail-list">
+                        <!-- Thumbnails will be added dynamically -->
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h1 id="product-title"></h1>
+                    <div class="product-price">
+                        <span id="current-price"></span>
+                        <span id="original-price"></span>
+                    </div>
+                    <p id="product-description"></p>
+                    
+                    <div class="product-options">
+                        <div class="size-selector">
+                            <h3>Size</h3>
+                            <div id="size-options" class="size-options">
+                                <!-- Size options will be added dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="color-selector">
+                            <h3>Color</h3>
+                            <div id="color-options" class="color-options">
+                                <!-- Color options will be added dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Search Popup -->
+    <div id="search-popup" class="search-popup">
+        <div class="search-popup-content">
+            <div class="search-header">
+                <input type="text" placeholder="Search products..." class="search-input">
+                <button class="close-search">&times;</button>
+            </div>
+            <div class="search-results">
+                <!-- Search results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script src="/product-detail.js"></script>
+</body>
+</html> 
