@@ -56,6 +56,18 @@ export default function Home() {
   const [perfectPicks, setPerfectPicks] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  /*
+    추천 상품 데이터 조회
+    method: POST /api/v1/recommendations
+    사용자 행동 기반 GRU 모델 추천
+
+    response: [ { name: string, event: string }, ...]
+    -------------------------------------------------
+    method: POST /api/v2/recommendations
+    TWO TOWER 모델 추천
+
+    response: [ { name: string, event: string }, ...]
+  */
   useEffect(() => {
     const fetchRecommends = async () => {
       try {
@@ -80,6 +92,17 @@ export default function Home() {
     fetchRecommends()
   }, [])
 
+  /*
+      고객 행동 기록 요청 API 
+      method: GET /api/v1/customers/behaviors
+
+      고객 행동 기록 생성 API
+      method: POST /api/v1/customers/behaviors
+      body: { name: string, event: string }
+      event: item_view, item_like, item_add_to_cart_tap, offer_make, buy_start, buy_comp
+
+      response: [ { name: string, event: string }, ...]
+  */
   const createCustomerBehavior = async (name: string) => {
     try {
       const res = await fetch('http://4.230.41.237:8000/api/v1/customers/behaviors', {
