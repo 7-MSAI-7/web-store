@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/web-store-main' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/web-store' : '',
 }
 
 module.exports = nextConfig 
