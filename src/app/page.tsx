@@ -80,6 +80,22 @@ export default function Home() {
     fetchRecommends()
   }, [])
 
+  const createCustomerBehavior = async (name: string) => {
+    try {
+      const res = await fetch('http://4.230.41.237:8000/api/v1/customers/behaviors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: name,
+          event: 'item_view',
+        }),
+      })
+    } catch (error) {
+      console.error('Error creating customer behavior:', error)
+    }
+  }
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchTerm.trim()) {
@@ -112,7 +128,7 @@ export default function Home() {
             </p>
           </div>
 
-          <form onSubmit={handleSearch} className="relative">
+          {/* <form onSubmit={handleSearch} className="relative"> */}
             <div className="relative w-full max-w-4xl mx-auto">
               <input
                 type="text"
@@ -120,6 +136,11 @@ export default function Home() {
                 className="w-full px-8 py-6 text-xl lg:text-2xl border-2 border-gray-300 rounded-full focus:border-black outline-none transition-colors shadow-lg"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    createCustomerBehavior(searchTerm)
+                  }
+                }}
               />
               <button
                 type="submit"
@@ -128,7 +149,7 @@ export default function Home() {
                 <IoSearch size={36} />
               </button>
             </div>
-          </form>
+          {/* </form> */}
 
           <div className="mt-8 flex justify-center gap-4 text-xl lg:text-2xl">
             <Link
