@@ -29,6 +29,7 @@ jobs:
       - name: Build
         run: |
           npm run build
+          touch out/.nojekyll
           ls -la out/
           echo "Build completed"
 
