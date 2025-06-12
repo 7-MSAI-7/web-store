@@ -12,103 +12,112 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import TopBanner from '@/components/TopBanner'
 import Navbar from '@/components/Navbar'
 import ProductCard from '@/components/ProductCard'
 import Link from 'next/link'
 import { IoSearch } from 'react-icons/io5'
+import SkeletonCard from '@/components/SkeletonCard'
 
-// 추천 상품 데이터
-// 각 상품은 id, 제목, 가격, 할인율(선택), 이미지 경로, 카테고리, 서브카테고리를 포함
-const perfectPicks = [
-  {
-    id: "oversized-fit-cotton-t-shirt",
-    title: "Oversized Fit Cotton T-shirt",
-    price: 190,
-    discount: 15,
-    image: "/images/tshirt.jpg",
-    category: "men",
-    subcategory: "t-shirts"
-  },
-  {
-    id: "button-detail-jacket",
-    title: "Button-detail Jacket",
-    price: 420,
-    discount: 20,
-    image: "/images/jacket.jpg",
-    category: "women",
-    subcategory: "jackets"
-  },
-  {
-    id: "viscose-shirt-dress",
-    title: "Viscose Shirt Dress",
-    price: 340,
-    discount: 20,
-    image: "/images/dress.jpg",
-    category: "women",
-    subcategory: "dresses"
-  },
-  {
-    id: "straight-regular-jeans",
-    title: "Straight Regular Jeans",
-    price: 220,
-    discount: 15,
-    image: "/images/jeans.jpg",
-    category: "men",
-    subcategory: "jeans"
-  },
-  {
-    id: "cotton-twill-jacket",
-    title: "Cotton Twill Jacket",
-    price: 75,
-    discount: 15,
-    image: "/images/twill-jacket.jpg",
-    category: "men",
-    subcategory: "jackets"
-  },
-  {
-    id: "linen-blend-shirt",
-    title: "Linen-blend Shirt",
-    price: 340,
-    image: "/images/linen-shirt.jpg",
-    category: "women",
-    subcategory: "shirts"
-  }
-]
+interface Product {
+  name: string;
+  price: string;
+  image: string;
+  seller: string;
+}
 
 // 베스트셀러 상품 데이터
 // 각 상품은 id, 제목, 가격, 이미지 경로, 카테고리, 서브카테고리를 포함
-const bestSellers = [
+const bestSellers: Product[] = [
   {
-    id: "women-formal-suit",
-    title: "WOMEN SOLID SLIM FIT SINGLE BREASTED 2-PIECE FORMAL SUIT",
-    price: 420,
+    seller: "women-formal-suit",
+    name: "WOMEN SOLID SLIM FIT SINGLE BREASTED 2-PIECE FORMAL SUIT",
+    price: "420",
     image: "/images/formal-suit.jpg",
-    category: "women",
-    subcategory: "suits"
   },
   {
-    id: "cotton-pique-polo",
-    title: "Cotton Pique Polo Shirt",
-    price: 65,
+    seller: "cotton-pique-polo",
+    name: "Cotton Pique Polo Shirt",
+    price: "65",
     image: "/images/polo.jpg",
-    category: "men",
-    subcategory: "polo-shirts"
   },
   {
-    id: "hiking-jacket",
-    title: "TERREX XPLORIC RAIN.RDY HIKING JACKET",
-    price: 320,
+    seller: "hiking-jacket",
+    name: "TERREX XPLORIC RAIN.RDY HIKING JACKET",
+    price: "320",
     image: "/images/hiking-jacket.jpg",
-    category: "men",
-    subcategory: "jackets"
   }
 ]
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [perfectPicks, setPerfectPicks] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  /*
+    추천 상품 데이터 조회
+    method: POST /api/v1/recommendations
+    사용자 행동 기반 GRU 모델 추천
+
+    response: [ { name: string, event: string }, ...]
+    -------------------------------------------------
+    method: POST /api/v2/recommendations
+    TWO TOWER 모델 추천
+
+    response: [ { name: string, event: string }, ...]
+  */
+  useEffect(() => {
+    const fetchRecommends = async () => {
+      try {
+        const res = await fetch('http://4.230.41.237:8000/api/v2/recommendations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        })
+        if (!res.ok) {
+          console.error('Failed to fetch recommendations')
+          return
+        }
+        const data = await res.json()
+
+        setPerfectPicks(data)
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching recommendations:', error)
+      }
+    }
+
+    fetchRecommends()
+  }, [])
+
+  /*
+      고객 행동 기록 요청 API 
+      method: GET /api/v1/customers/behaviors
+
+      고객 행동 기록 생성 API
+      method: POST /api/v1/customers/behaviors
+      body: { name: string, event: string }
+      event: item_view, item_like, item_add_to_cart_tap, offer_make, buy_start, buy_comp
+
+      response: [ { name: string, event: string }, ...]
+  */
+  const createCustomerBehavior = async (name: string) => {
+    try {
+      const res = await fetch('http://4.230.41.237:8000/api/v1/customers/behaviors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: name,
+          event: 'item_view',
+        }),
+      })
+    } catch (error) {
+      console.error('Error creating customer behavior:', error)
+    }
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -142,14 +151,19 @@ export default function Home() {
             </p>
           </div>
 
-          <form onSubmit={handleSearch} className="relative">
+          {/* <form onSubmit={handleSearch} className="relative"> */}
             <div className="relative w-full max-w-4xl mx-auto">
               <input
                 type="text"
-                placeholder="Search for products..."
+                placeholder="원하는 상품을 검색해보세요!"
                 className="w-full px-8 py-6 text-xl lg:text-2xl border-2 border-gray-300 rounded-full focus:border-black outline-none transition-colors shadow-lg"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    createCustomerBehavior(searchTerm)
+                  }
+                }}
               />
               <button
                 type="submit"
@@ -158,7 +172,7 @@ export default function Home() {
                 <IoSearch size={36} />
               </button>
             </div>
-          </form>
+          {/* </form> */}
 
           <div className="mt-8 flex justify-center gap-4 text-xl lg:text-2xl">
             <Link
@@ -199,17 +213,19 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-12 px-4">
-            {perfectPicks.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <ProductCard {...product} />
-              </motion.div>
-            ))}
+            {isLoading
+              ? Array.from({ length: 8 }).map((_, index) => <SkeletonCard key={index} />)
+              : perfectPicks.map((product, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <ProductCard {...product} />
+                  </motion.div>
+                ))}
           </div>
         </div>
       </section>
@@ -229,10 +245,10 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-12 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-8 lg:gap-12 px-4">
             {bestSellers.map((product, index) => (
               <motion.div
-                key={product.id}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
