@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="container">
+            <p>Free shipping on all orders over $50</p>
+            <div class="top-banner-links">
+                <a href="#">Sign in</a>
+                <a href="#">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">OUR SHOP</a>
+            <div class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/category/men">Men</a>
+                <a href="/category/women">Women</a>
+                <a href="/category/kids">Kids</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <button class="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>New Collection</h1>
+            <p>Discover our latest arrivals</p>
+            <a href="/category/men" class="btn">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Perfect Picks Section -->
+    <section class="perfect-picks">
+        <div class="container">
+            <h2>Perfect Picks for You</h2>
+            <div class="product-grid" id="perfect-picks-grid">
+                <!-- Products will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers Section -->
+    <section class="best-sellers">
+        <div class="container">
+            <h2>Best Sellers</h2>
+            <div class="product-grid" id="best-sellers-grid">
+                <!-- Products will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2>Shop by Category</h2>
+            <div class="category-grid">
+                <a href="/category/men" class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&auto=format&fit=crop&q=60" alt="Men's Collection">
+                    </div>
+                    <h3>Men's Collection</h3>
+                </a>
+                <a href="/category/women" class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&auto=format&fit=crop&q=60" alt="Women's Collection">
+                    </div>
+                    <h3>Women's Collection</h3>
+                </a>
+                <a href="/category/kids" class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=800&auto=format&fit=crop&q=60" alt="Kids' Collection">
+                    </div>
+                    <h3>Kids' Collection</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>OUR SHOP</h3>
+                    <p>Your one-stop destination for fashion and style.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/category/men">Men</a></li>
+                        <li><a href="/category/women">Women</a></li>
+                        <li><a href="/category/kids">Kids</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="/category/men">Men's Collection</a></li>
+                        <li><a href="/category/women">Women's Collection</a></li>
+                        <li><a href="/category/kids">Kids' Collection</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Our Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Search Popup -->
+    <div id="search-popup" class="search-popup">
+        <div class="search-popup-content">
+            <div class="search-header">
+                <input type="text" placeholder="Search products..." class="search-input">
+                <button class="close-search">&times;</button>
+            </div>
+            <div class="search-results">
+                <!-- Search results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
