@@ -1,95 +1,66 @@
-/**
- * 상품 카드 컴포넌트
- * 
- * 주요 기능:
- * 1. 상품 이미지, 제목, 가격 표시
- * 2. 할인율이 있는 경우 할인 가격 표시
- * 3. 호버 시 애니메이션 효과
- * 4. 구매 버튼
- * 
- * Props:
- * - id: 상품 고유 식별자
- * - title: 상품명
- * - price: 원래 가격
- * - discount: 할인율 (선택사항)
- * - image: 상품 이미지 URL
- * - category: 상품 카테고리
- * - subcategory: 상품 서브카테고리
- */
+// ProductCard.tsx
+// 상품 카드 컴포넌트
+// - 상품 이미지, 제목, 가격, 할인율 표시
+// - 호버 시 상세 정보 표시
+// - 클릭 시 상품 상세 페이지로 이동
 
-'use client'
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-
-// 상품 카드 Props 인터페이스 정의
-interface ProductCardProps {
-  id: string
-  title: string
-  price: number
-  discount?: number
-  image: string
-  category: string
-  subcategory: string
+// 상품 데이터 타입 정의
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  image: string;
+  seller: string;
 }
 
-export default function ProductCard({ id, title, price, discount, image, category, subcategory }: ProductCardProps) {
-  // 할인된 가격 계산
-  const discountedPrice = discount ? price * (1 - discount / 100) : price
+// ProductCard 컴포넌트 Props 타입 정의
+interface ProductCardProps {
+  product: Product;
+}
 
+export default function ProductCard({ product }: ProductCardProps) {
   return (
-    // 상품 카드 컨테이너
-    // 호버 시 위로 살짝 올라가는 애니메이션 적용
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="group relative bg-white rounded-lg overflow-hidden"
-    >
-      <Link href={`/category/${category}/${id}`}>
-        {/* 상품 이미지 영역 */}
-        <div className="aspect-[3/4] relative overflow-hidden">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          {/* 할인 배지 (할인율이 있는 경우에만 표시) */}
-          {discount && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              -{discount}%
-            </div>
-          )}
-        </div>
+    // 상품 카드 컨테이너 - 호버 효과와 그림자 적용
+    <div className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      {/* 상품 이미지 영역 */}
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg">
+        <Image
+          src={product.image}
+          alt={product.name}
+          width={500}
+          height={500}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+      </div>
 
-        {/* 상품 정보 영역 */}
-        <div className="p-6 pb-24">
-          <h3 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-gray-700">
-            {title}
+      {/* 상품 정보 영역 */}
+      <div className="p-4">
+        {/* 상품 제목 - 클릭 시 상세 페이지로 이동 */}
+        <Link href={``}>
+          <h3 className="text-lg font-medium text-gray-900 mb-2 hover:text-indigo-600 transition-colors">
+            {product.name}
           </h3>
-          {/* 가격 정보 */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xl lg:text-2xl font-bold text-gray-900">
-              ${discountedPrice.toFixed(2)}
-            </span>
-            {/* 할인 전 가격 (할인율이 있는 경우에만 표시) */}
-            {discount && (
-              <span className="text-lg lg:text-xl text-gray-500 line-through">
-                ${price.toFixed(2)}
-              </span>
-            )}
-          </div>
-        </div>
+        </Link>
 
-        {/* 구매 버튼 */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-gray-900 text-white py-3 rounded-full text-lg lg:text-xl font-medium transition-colors hover:bg-gray-800"
-          >
-            Buy Now
-          </motion.button>
+        {/* 가격 정보 영역 */}
+        <div className="flex items-center justify-between">
+          {/* 원래 가격 (할인이 있는 경우) */}
+          <span className="text-sm">
+            {product.price}
+          </span>
         </div>
-      </Link>
-    </motion.div>
-  )
+      </div>
+
+      {/* 호버 시 표시되는 장바구니 버튼 */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white bg-opacity-90 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+        <button className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition-colors">
+          😍
+        </button>
+      </div>
+    </div>
+  );
 } 
