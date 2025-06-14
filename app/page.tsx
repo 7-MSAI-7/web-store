@@ -49,7 +49,6 @@ export default function Home() {
           index === self.findIndex((t) => t.id === product.id)
         )
         recommendedProducts = recommendedProducts.sort(() => Math.random() - 0.5)
-        recommendedProducts = recommendedProducts.slice(0, 40)
 
         setProducts(recommendedProducts)
         setIsLoading(false)
