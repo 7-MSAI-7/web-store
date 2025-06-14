@@ -30,7 +30,7 @@ export default function Home() {
 
         // V1 추천 상품 처리
         recommendedProducts = recommendedProducts.concat(v1Products.reduce((acc: Product[], data: Product) => {
-          if (data.image && data.name && data.price && data.seller && !data.image.startsWith('https://')) {
+          if (data.image && data.name && data.price && data.seller && !data.image.startsWith('https://') && !data.image.startsWith('No Image')) {
             acc.push(data)
           }
           return acc
@@ -38,7 +38,7 @@ export default function Home() {
 
         // V2 추천 상품 처리
         recommendedProducts = recommendedProducts.concat(v2Products.reduce((acc: Product[], data: Product) => {
-          if (data.image && data.name && data.price && data.seller && !data.image.startsWith('https://')) {
+          if (data.image && data.name && data.price && data.seller && !data.image.startsWith('https://') && !data.image.startsWith('No Image')) {
             acc.push(data)
           }
           return acc
