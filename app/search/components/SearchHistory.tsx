@@ -1,42 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { FiClock, FiX } from 'react-icons/fi';
 
 interface SearchHistoryProps {
   onSearch: (term: string) => void;
+  history: string[];
+  onRemoveHistory: (term: string) => void;
   maxItems?: number;
 }
 
 export default function SearchHistory({ 
   onSearch, 
+  history,
+  onRemoveHistory,
   maxItems = 5 
 }: SearchHistoryProps) {
-  const [history, setHistory] = useState<string[]>([]);
-
-  // 검색 히스토리 로드
-  useEffect(() => {
-    const savedHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    setHistory(savedHistory);
-  }, []);
-
   // 검색어 삭제
   const removeSearchTerm = (term: string, e: React.MouseEvent) => {
     e.stopPropagation(); // 이벤트 버블링 방지
-    const newHistory = history.filter(item => item !== term);
-    setHistory(newHistory);
-    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+    onRemoveHistory(term);
   };
 
   // 검색어 클릭
   const handleSearchClick = (term: string) => {
-    // 히스토리 순서 업데이트
-    const newHistory = [term, ...history.filter(item => item !== term)]
-      .slice(0, maxItems);
-    setHistory(newHistory);
-    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
-    
-    // 부모 컴포넌트에 검색어 전달
     onSearch(term);
   };
 
@@ -49,7 +35,7 @@ export default function SearchHistory({
         <span>최근 검색어</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {history.map((term) => (
+        {history.slice(0, maxItems).map((term) => (
           <button
             key={term}
             onClick={() => handleSearchClick(term)}
