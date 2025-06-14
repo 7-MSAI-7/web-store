@@ -1,33 +1,27 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, FormEvent, useEffect } from 'react';
 import { FiSearch } from 'react-icons/fi';
 
-const MAX_HISTORY_ITEMS = 5;
+interface SearchFormProps {
+  onSearch: (term: string) => void;
+  initialValue?: string;
+}
 
-export default function SearchForm() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const router = useRouter();
+export default function SearchForm({ onSearch, initialValue = '' }: SearchFormProps) {
+  const [searchTerm, setSearchTerm] = useState(initialValue);
 
-  // 검색어 저장
-  const saveSearchHistory = (term: string) => {
-    if (!term.trim()) return;
-    
-    const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    const newHistory = [term, ...history.filter((item: string) => item !== term)]
-      .slice(0, MAX_HISTORY_ITEMS);
-    
-    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
-  };
+  // initialValue가 변경될 때 검색어 업데이트
+  useEffect(() => {
+    setSearchTerm(initialValue);
+  }, [initialValue]);
 
   // 검색 실행
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
 
-    saveSearchHistory(searchTerm);
-    router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
+    onSearch(searchTerm);
   };
 
   return (

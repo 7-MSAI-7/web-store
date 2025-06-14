@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import SearchForm from './components/SearchForm';
 import SearchHistory from './components/SearchHistory';
 import ProductList from './components/ProductList';
-import { searchProducts } from '@/app/lib/api/endpoints';
+import { searchProducts, createV1Recommendations, createV2Recommendations, createUserBehavior } from '@/app/lib/api/endpoints';
 import type { Product } from '@/app/lib/api/types';
 
 const ITEMS_PER_PAGE = 20;
@@ -17,8 +17,13 @@ export default function SearchPage() {
   const [error, setError] = useState<string | null>(null);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const searchQuery = searchParams.get('q') || '';
+  // URL 파라미터에서 검색어 가져오기
+  useEffect(() => {
+    const query = searchParams.get('q') || '';
+    setSearchQuery(query);
+  }, [searchParams]);
 
   // 클라이언트 사이드 페이지네이션
   const { products, totalPages } = useMemo(() => {
@@ -43,17 +48,16 @@ export default function SearchPage() {
         setError(null);
         setCurrentPage(1); // 검색어가 변경되면 첫 페이지로 리셋
 
-        // endpoints.ts에서 정의한 searchProducts 함수 사용
+        createUserBehavior({
+          name: searchQuery,
+          event: 'item_view'
+        }).then(() => {
+            createV1Recommendations();
+            createV2Recommendations();
+        });
+
         const data = await searchProducts({ q: searchQuery });
         setAllProducts(data || []);
-
-        // 검색어 저장
-        if (searchQuery.trim()) {
-          const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-          const newHistory = [searchQuery, ...history.filter((item: string) => item !== searchQuery)]
-            .slice(0, 5);
-          localStorage.setItem('searchHistory', JSON.stringify(newHistory));
-        }
       } catch (err) {
         setError('상품을 불러오는 중 오류가 발생했습니다.');
         console.error('Search error:', err);
@@ -70,14 +74,26 @@ export default function SearchPage() {
     setCurrentPage(page);
   };
 
+  // 검색어 변경 처리
+  const handleSearch = (term: string) => {
+    const trimmedTerm = term.trim();
+    if (!trimmedTerm) return;
+    
+    const encodedTerm = encodeURIComponent(trimmedTerm);
+    router.push(`/search?q=${encodedTerm}`);
+  };
+
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         {/* 검색 폼 */}
-        <SearchForm />
+        <SearchForm 
+          onSearch={handleSearch} 
+          initialValue={searchQuery}
+        />
 
         {/* 검색 히스토리 */}
-        <SearchHistory />
+        <SearchHistory onSearch={handleSearch} />
 
         {/* 검색 결과 */}
         <div className="mt-8">

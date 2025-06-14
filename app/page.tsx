@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { IoSearch } from 'react-icons/io5'
 import SkeletonCard from '../components/SkeletonCard'
 import { useRouter } from 'next/navigation'
-import { createUserBehavior, createV1Recommendations, createV2Recommendations } from '@/app/lib/api/endpoints'
+import { getV1Recommendations, getV2Recommendations } from '@/app/lib/api/endpoints'
 import { Product } from './lib/api/types'
 
 export default function Home() {
@@ -22,8 +22,8 @@ export default function Home() {
       try {
         // 추천 API 호출
         const [v1Products, v2Products] = await Promise.all([
-          createV1Recommendations(),
-          createV2Recommendations()
+          getV1Recommendations(),
+          getV2Recommendations()
         ]);
         
         let recommendedProducts: Product[] = []

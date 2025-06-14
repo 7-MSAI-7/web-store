@@ -1,12 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { FiClock, FiX } from 'react-icons/fi';
 
-export default function SearchHistory() {
+interface SearchHistoryProps {
+  onSearch: (term: string) => void;
+  maxItems?: number;
+}
+
+export default function SearchHistory({ 
+  onSearch, 
+  maxItems = 5 
+}: SearchHistoryProps) {
   const [history, setHistory] = useState<string[]>([]);
-  const router = useRouter();
 
   // 검색 히스토리 로드
   useEffect(() => {
@@ -15,7 +21,8 @@ export default function SearchHistory() {
   }, []);
 
   // 검색어 삭제
-  const removeSearchTerm = (term: string) => {
+  const removeSearchTerm = (term: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
     const newHistory = history.filter(item => item !== term);
     setHistory(newHistory);
     localStorage.setItem('searchHistory', JSON.stringify(newHistory));
@@ -23,7 +30,14 @@ export default function SearchHistory() {
 
   // 검색어 클릭
   const handleSearchClick = (term: string) => {
-    router.push(`/search?q=${encodeURIComponent(term)}`);
+    // 히스토리 순서 업데이트
+    const newHistory = [term, ...history.filter(item => item !== term)]
+      .slice(0, maxItems);
+    setHistory(newHistory);
+    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+    
+    // 부모 컴포넌트에 검색어 전달
+    onSearch(term);
   };
 
   if (history.length === 0) return null;
@@ -35,19 +49,19 @@ export default function SearchHistory() {
         <span>최근 검색어</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {history.map((term, index) => (
-          <div
-            key={index}
-            className="group flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 cursor-pointer"
+        {history.map((term) => (
+          <button
+            key={term}
+            onClick={() => handleSearchClick(term)}
+            className="group flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors"
           >
-            <span onClick={() => handleSearchClick(term)}>{term}</span>
-            <button
-              onClick={() => removeSearchTerm(term)}
-              className="opacity-100"
+            <span>{term}</span>
+            <span
+              onClick={(e) => removeSearchTerm(term, e)}
             >
               <FiX className="w-4 h-4 text-gray-500 hover:text-gray-700" />
-            </button>
-          </div>
+            </span>
+          </button>
         ))}
       </div>
     </div>
