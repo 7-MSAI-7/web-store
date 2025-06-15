@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // API 호스트 URL 설정
-const API_HOST = "https://4.217.216.190:8000"
+const API_HOST = process.env.NODE_ENV === 'production'
+  ? 'https://4.217.216.190:8000'
+  : 'http://localhost:8000';
 
 // axios 인스턴스 생성
 export const apiClient = axios.create({
