@@ -132,6 +132,18 @@ function SearchPageContent() {
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
+        {/* 브랜드 로고 */}
+        <a href="/" className="flex items-center mb-8">
+          <div className="h-12 w-12 overflow-hidden mr-3 rounded-lg border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white p-2">
+            <img 
+              src="/따라사.png" 
+              alt="따라사" 
+              className="w-full h-full object-contain scale-125"
+            />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800">따라사</h1>
+        </a>
+
         {/* 검색 폼 */}
         <SearchForm 
           onSearch={handleSearch} 

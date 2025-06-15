@@ -72,13 +72,16 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="w-full"
         >
-          <div className="text-center">
-            <h1 className="text-7xl lg:text-9xl font-bold text-gray-900 mb-6">
-              MS AI School 7-7
-            </h1>
-            <p className="text-2xl lg:text-4xl text-gray-600">
-              
-            </p>
+          {/* 브랜드 로고 */}
+          <div className="flex items-center justify-center mb-12 px-4">
+            <div className="h-24 w-24 overflow-hidden mr-4 rounded-lg border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white p-2">
+              <img 
+                src="/따라사.png" 
+                alt="따라사" 
+                className="w-full h-full object-contain scale-125"
+              />
+            </div>
+            <h1 className="text-5xl font-bold text-gray-900">따라사</h1>
           </div>
 
           {/* 검색 폼 */}
